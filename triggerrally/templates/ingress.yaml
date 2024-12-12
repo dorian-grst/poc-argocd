@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: triggerrally-ingress
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    traefik.ingress.kubernetes.io/redirection-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+  labels:
+    name: triggerrally-ingress
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: {{ .Values.triggerrally.host }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: triggerrally
+                port:
+                  number: {{ .Values.service.externalPort }}
